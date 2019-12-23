@@ -2,6 +2,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 from grid_world import standard_grid, negative_grid
 
+
+def print_all_Qsa(Q):
+    for k,v in Q.items():
+        print('state: ',k)
+        print('values: ', v)
+
 def print_values(V,g):
     for i in range(g.width):
         print("----------------------------")
@@ -90,9 +96,6 @@ if __name__ == '__main__':
         # care about updating it.
         a, _ = max_dict(Q[s])     
         biggest_change = 0
-        if manual: 
-            print('a: ' + a)  
-            input()
         
         while not grid.game_over():
             a = random_action(a,eps=0.5/t)
@@ -114,13 +117,20 @@ if __name__ == '__main__':
             # You can see that even though at the bottom we set a = a2, at
             # the beginning of the while loop, we use eps greedy to possibly change the action.
             a2, max_q_s2a2 = max_dict(Q[s2])
-            if manual:
-                print('old_qsa: ',old_qsa)
-                print('a2: ', a2)
-                print('max_q_s2a2: ', max_q_s2a2)
             
             Q[s][a] = Q[s][a] + alpha*(r + GAMMA*max_q_s2a2 - Q[s][a])
             biggest_change = max(biggest_change, np.abs(old_qsa - Q[s][a]))
+            if manual:
+                print('state: ',s)
+                print('action: ',a)
+                print('reward: ',r)
+                print('alpha: ',alpha)
+                print('old_qsa: ',old_qsa)
+                print('s2: ',s2)
+                print('a2: ', a2)
+                print('max_q_s2a2: ', max_q_s2a2)
+                print('Q[s][a]: ',Q[s][a])
+                input()
 
             update_counts[s] = update_counts.get(s,0) + 1
 
@@ -153,4 +163,7 @@ if __name__ == '__main__':
     print_values(V, grid)
     print('policy:')
     print_policy(policy, grid)
-        
+    
+
+    print('all Q[s][a]')
+    print_all_Qsa(Q)

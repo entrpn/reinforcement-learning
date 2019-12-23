@@ -2,6 +2,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from grid_world import standard_grid, negative_grid
 
+manual = False
+
 def print_values(V,g):
     for i in range(g.width):
         print("----------------------------")
@@ -77,10 +79,21 @@ if __name__ == '__main__':
 
         states_and_rewards = play_game(grid, policy)
 
+        print('states_and_rewards size: ',len(states_and_rewards))
         for t in range(len(states_and_rewards) -1):
             s, _ = states_and_rewards[t]
             s2, r = states_and_rewards[t+1]
+            print('V[s]: ',V[s])
             V[s] = V[s] + ALPHA*(r + GAMMA*V[s2] - V[s])
+            print('s: ',s)
+            print('s2: ',s2)
+            print('r: ',r)
+            print('V[s2]: ',V[s2])
+            print('V[s] (after): ',V[s])
+
+            if manual:
+                input()
+        
     
     print('values:')
     print_values(V, grid)

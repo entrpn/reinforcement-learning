@@ -2,6 +2,14 @@ import numpy as np
 import matplotlib.pyplot as plt
 from grid_world import standard_grid, negative_grid
 
+manual = False
+logall = False
+
+def print_all_Qsa(Q):
+    for k,v in Q.items():
+        print('state: ',k)
+        print('values: ', v)
+
 def print_values(V,g):
     for i in range(g.width):
         print("----------------------------")
@@ -91,14 +99,24 @@ if __name__ == '__main__':
             # if s2 not in policy then it's a terminal state, all Q are 0
             a2 = max_dict(Q[s2])[0]
             a2 = random_action(a2, eps=0.5/t) # epsilon-greedy
-            
+
             #we will update Q(s,a) AS we experience the episode
             alpha = ALPHA / update_counts_sa[s][a]
             update_counts_sa[s][a] += 0.005
             old_qsa = Q[s][a]
             Q[s][a] = Q[s][a] + alpha*(r + GAMMA*Q[s2][a2] - Q[s][a])
             biggest_change = max(biggest_change, np.abs(old_qsa - Q[s][a]))
-
+            if logall:
+                print('s: ',s)
+                print('action: ',a)
+                print('reward: ',r)
+                print('s2: ',s2)
+                print('a2: ',a2)
+                print('old_qsa: ',old_qsa)
+                print('Q[s2][a2]: ',Q[s2][a2])
+                print('new Q[s][a]: ',Q[s][a])
+            if manual:
+                input()
             # we would like to know how olften Q(s) has been updated too
             update_counts[s] = update_counts.get(s,0) + 1
 
@@ -127,3 +145,6 @@ if __name__ == '__main__':
     print_values(V, grid)
     print('policy:')
     print_policy(policy, grid)
+
+    print('all Q[s][a]')
+    print_all_Qsa(Q)

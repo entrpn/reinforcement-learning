@@ -10,6 +10,8 @@ numpy = "*"
 matplotlib = "*"
 pandas = "*"
 sklearn = "*"
+tensorflow = "*"
+gym = {extras = ["all"],version = "*"}
 
 [requires]
 python_version = "3.7"
